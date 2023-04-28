@@ -1,35 +1,42 @@
+project_name: goidc-proxy
+env:
+  - CGO_ENABLED=0
 before:
   hooks:
     - go mod tidy
     - go generate ./...
-builds:
-  - env:
-    - CGO_ENABLED=0
-    goos:
-    - linux
 archives:
-  - replacements:
-      386: i386
-      amd64: x86_64
-checksum:
-  name_template: 'checksums.txt'
-snapshot:
-  name_template: '{{ incpatch .Version }}-next'
-nfpms:
-  - id: nird-goidc-proxy
-    package_name: nird-goidc-proxy
-    replacements:
-      amd64: 64-bit
-      386: 32-bit
-    vendor: Sigma2 AS
-    homepage: https://github.com/UNINETTSigma2/goidc-proxy
-    maintainer: Sigma2 AS <post@sigma2.no>
-    description: |-
-      NIRD TOOLKIT authentication proxy for workloads
-    license: MIT
-    formats:
-      - deb
-      - rpm
+  - id: goidc-proxy
+    builds:
+      - goidc-proxy
+    format: binary
+builds:
+  - id: goidc-proxy
+    binary: goidc-proxy
+    mod_timestamp: '{{ .CommitTimestamp }}'
+    goos:
+      - linux
+    goarch:
+      - amd64
+universal_binaries:
+  - id: goidc-proxy
+    replace: false
+dockers:
+  - image_templates:
+    - "tlyng/{{ .ProjectName }}:{{ .Version }}"
+    - "tlyng/{{ .ProjectName }}:{{ .Major }}"
+    - "tlyng/{{ .ProjectName }}:{{ .Major }}.{{ .Minor }}"
+    - "tlyng/{{ .ProjectName }}:latest"
+    dockerfile: Dockerfile
+    build_flag_templates:
+      - --label=org.opencontainers.image.title={{ .ProjectName }}
+      - --label=org.opencontainers.image.description={{ .ProjectName }}
+      - --label=org.opencontainers.image.url=https://github.com/tlyng/{{ .ProjectName }}
+      - --label=org.opencontainers.image.source=https://github.com/tlyng/{{ .ProjectName }}
+      - --label=org.opencontainers.image.version={{ .Version }}
+      - --label=org.opencontainers.image.created={{ .Date }}
+      - --label=org.opencontainers.image.revision={{ .FullCommit }}
+      - --label=org.opencontainers.image.licenses=MIT
 changelog:
   sort: asc
   filters:
