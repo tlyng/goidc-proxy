@@ -28,6 +28,7 @@ dockers:
     - "tlyng/{{ .ProjectName }}:{{ .Major }}.{{ .Minor }}"
     - "tlyng/{{ .ProjectName }}:latest"
     dockerfile: Dockerfile.release
+    skip_push: false
     build_flag_templates:
       - --label=org.opencontainers.image.title={{ .ProjectName }}
       - --label=org.opencontainers.image.description={{ .ProjectName }}
