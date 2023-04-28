@@ -30,7 +30,7 @@ dockers:
     dockerfile: Dockerfile
     build_flag_templates:
       - --label=org.opencontainers.image.title={{ .ProjectName }}
-      - --label=org.opencontainers.image.description={{ .ProjectName }}
+      - --label=org.opencontainers.image.description={{ .ProjectName }}
       - --label=org.opencontainers.image.url=https://github.com/tlyng/{{ .ProjectName }}
       - --label=org.opencontainers.image.source=https://github.com/tlyng/{{ .ProjectName }}
       - --label=org.opencontainers.image.version={{ .Version }}
